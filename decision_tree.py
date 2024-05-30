@@ -38,25 +38,31 @@ intial_entropy = entropy(grey_hair)
 
 best_entropy = intial_entropy
 
-best_split = None
+best_splits = []
 
 for split_point in age:
-    left = age < int(split_point)
-    right = age > int(split_point)
+    left = age <= split_point # All entries in age that are less than split_point
+    right = age >= split_point # All entries in age that are greater than split_point
 
-    left_entropy = entropy(left)
-    right_entropy = entropy(right)
+    left_entropy = entropy(grey_hair[left])
+    right_entropy = entropy(grey_hair[right])
+
+    #print("splitpoint", split_point,"left", left_entropy, "right", right_entropy)
 
     current_entropy = left_entropy + right_entropy
-
+    print(current_entropy)
     if current_entropy < best_entropy:
         best_entropy = current_entropy
-        best_split = split_point
-
-#print("Best split point is at:", best_split, "with a entropy of:", best_entropy)
+        best_splits.append(split_point)
 
 
-## PROBLEM: Current best entropy is at split position 0? Should be an age, not 0.
+
+
+print("Best splits point are at:", best_splits, "with the split point", best_splits[0], """
+      having the overall best entropy of:""", best_entropy)
+
+
+## PROBLEM: Current best entropy is at split position 0?
 
 
 #Chaos, Vermischung, Diversion, Entropy minimieren, Einheitlichkeit maximieren:

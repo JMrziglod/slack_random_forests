@@ -38,6 +38,8 @@ intial_entropy = entropy(grey_hair)
 
 best_entropy = intial_entropy
 
+best_split_ever = None
+
 best_splits = []
 
 for split_point in age:
@@ -47,19 +49,94 @@ for split_point in age:
     left_entropy = entropy(grey_hair[left])
     right_entropy = entropy(grey_hair[right])
 
-    #print("splitpoint", split_point,"left", left_entropy, "right", right_entropy)
-
     current_entropy = left_entropy + right_entropy
-    print(current_entropy)
+
     if current_entropy < best_entropy:
         best_entropy = current_entropy
-        best_splits.append(split_point)
+        best_split_ever = split_point
+
+best_splits.append(best_split_ever)
+
+new_best_entropy = intial_entropy
+new_best_split = None
+
+for new_split in age[age < best_splits[0]]:
+    left_new = age <= new_split
+    right_new = age >= new_split
+
+    left_entropy_new = entropy(grey_hair[left_new])
+    right_entropy_new = entropy(grey_hair[right_new])
+
+    current_entropy_new = left_entropy_new + right_entropy_new
+
+    if current_entropy_new < intial_entropy:
+        new_best_entropy = current_entropy_new
+        new_best_split = new_split
+
+best_splits.append(new_best_split)
+
+print("Best splits point are at:", best_splits, "with the split point", best_split_ever, "having the overall best entropy of:", best_entropy)
+
+
+# %%
+
+
+# We just want the smallest entropy while ignoring if its less than the previous one
+
+def find_split(area):
+    best_entropy = 1
+    best_split = None
+    entropy_cache = {}
+
+
+    for split_point in area:
+        left = age < split_point
+        right = age >= split_point
+
+        left_entropy = entropy(grey_hair[left])
+        right_entropy = entropy(grey_hair[right])
+
+        current_entropy = left_entropy + right_entropy
+
+        entropy_cache[current_entropy] = split_point
+
+        
+
+        return entropy_cache
+
+
+
+# %%
+
+best_entropy = intial_entropy
+best_split = None
+
+for split_point in age:
+    left = age < split_point
+    right = age >= split_point
+
+    left_entropy = entropy(grey_hair[left])
+    right_entropy = entropy(grey_hair[right])
+
+    current_entropy = left_entropy + right_entropy
+
+    if current_entropy < best_entropy:
+        best_entropy = current_entropy
+        best_split = split_point
+
+
+print("Best entropy is:", best_entropy, "with a split at:", best_split)
 
 
 
 
-print("Best splits point are at:", best_splits, "with the split point", best_splits[0], """
-      having the overall best entropy of:""", best_entropy)
+
+
+
+# %%
+
+# Determine new split while disregarding the last split
+
 
 
 ## PROBLEM: Current best entropy is at split position 0?

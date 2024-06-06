@@ -80,6 +80,13 @@ print("Best splits point are at:", best_splits, "with the split point", best_spl
 
 # %%
 
+def splitter(x):
+    if len(x) == 2:
+        print("Yep its 2:", sum(x))
+    else:
+        splitter(x[:len(x)//2])
+        splitter(x[len(x)//2:])
+
 
 # We just want the smallest entropy while ignoring if its less than the previous one
 
